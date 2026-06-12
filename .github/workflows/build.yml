@@ -17,7 +17,7 @@ jobs:
           cd $GITHUB_WORKSPACE/toolchains
           git clone --depth=1 https://github.com/kdrag0n/proton-clang.git clang
 
-           - name: Build Kernel
+      - name: Build Kernel
         run: |
           export PATH="$GITHUB_WORKSPACE/toolchains/clang/bin:$PATH"
           export ARCH=arm64
@@ -30,16 +30,6 @@ jobs:
           
           # Compile the kernel
           make O=out CC=clang LD=ld.lld AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip -j$(nproc --all)
-
-
-          
-          export O=out
-          
-          # Use the specific NetHunter defconfig for this repository
-          make O=out wirus_defconfig
-          
-          # Compile the kernel
-          make O=out -j$(nproc --all)
 
       - name: Upload Kernel Image
         uses: actions/upload-artifact@v4
