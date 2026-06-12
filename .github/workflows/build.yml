@@ -28,7 +28,16 @@ jobs:
           
           # Use the specific NetHunter defconfig for this repository
           make O=out wirus_defconfig
+                    # Use the specific NetHunter defconfig for this repository
+          make O=out wirus_defconfig
           
+          # Disable problematic features for LLVM linker
+          ./scripts/config --file out/.config -d CONFIG_MODVERSIONS
+          ./scripts/config --file out/.config -d CONFIG_RTIC
+          make O=out olddefconfig
+          
+          # Compile the kernel
+          make O=out LD=ld.lld AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip -j$(nproc --all)
           # Compile the kernel
           make O=out LD=ld.lld AR=llvm-ar NM=llvm-nm OBJCOPY=llvm-objcopy OBJDUMP=llvm-objdump STRIP=llvm-strip -j$(nproc --all)
 
